@@ -24,24 +24,39 @@ export default function HeroSection() {
     });
 
     //Car + Green Sync Animation
-    tl.fromTo(
-      carRef.current,
-      { x: -150 },
-      {
-        x: () =>{
-         const maxX = sectionRef.current.offsetWidth - carRef.current.offsetWidth; 
-         return Math.min(maxX, window.innerWidth - carRef.current.offsetWidth + 200);
-        }
-        ease: "none",
-        onUpdate: function () {
-          const carX = gsap.getProperty(carRef.current, "x");
+   useEffect(() => {
+  gsap.registerPlugin(ScrollTrigger);
 
-          gsap.set(trailRef.current, {
-            width: carX + carRef.current.offsetWidth / 2,
-          });
-        },
-      }
-    );
+  const moveCar = () => {
+    const maxX = sectionRef.current.offsetWidth - carRef.current.offsetWidth;
+    return Math.min(maxX, window.innerWidth - carRef.current.offsetWidth);
+  };
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: sectionRef.current,
+      start: "top top",
+      end: "+=150%",
+      scrub: true,
+      pin: true,
+    },
+  });
+
+  tl.fromTo(
+    carRef.current,
+    { x: -150 },
+    {
+      x: moveCar, // arrow function ko direct property me assign
+      ease: "none",
+      onUpdate: function () {
+        const carX = gsap.getProperty(carRef.current, "x");
+        gsap.set(trailRef.current, {
+          width: carX + carRef.current.offsetWidth / 2,
+        });
+      },
+    }
+  );
+}, []);
 
     // 📦 Boxes animation (unchanged)
     tl.to(
