@@ -28,9 +28,10 @@ export default function HeroSection() {
       carRef.current,
       { x: -150 },
       {
-        x: () =>
+        x: () =>{
          const maxX = sectionRef.current.offsetWidth - carRef.current.offsetWidth; 
          return Math.min(maxX, window.innerWidth - carRef.current.offsetWidth + 200);
+        }
         ease: "none",
         onUpdate: function () {
           const carX = gsap.getProperty(carRef.current, "x");
